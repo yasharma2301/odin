@@ -1,0 +1,27 @@
+temp_data
+odin-firebase-service-account.json
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+env/
+ENV/
+
+# IDEs
+.vscode/
+.idea/
+
+# Dependency directories
+dist/
+build/
+*.egg-info/
+
+# Ignore logs
+*.log
+
+# Ignore local configuration
+.env
