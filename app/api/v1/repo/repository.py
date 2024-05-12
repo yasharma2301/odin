@@ -91,7 +91,3 @@ async def dumb(request: Request, identifier_id: int, db=Depends(get_db)):
             },
             status_code=400
         )
-    # return code_parser_service.parse_file()
-    # folder_name = f"{get_current_user(request)}-{current_milli_time()}"
-    # repository_service.clone_local(url, folder_name)
-    # queue_service.send_message(odin_queue, {})
