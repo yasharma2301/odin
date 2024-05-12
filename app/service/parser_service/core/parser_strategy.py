@@ -3,6 +3,7 @@ import tree_sitter_languages as tree_sitter
 import os
 import re
 
+
 class ParserStrategy(ABC):
     def __init__(self, file_path, parser_lang, class_name_pattern, function_name_pattern):
         self.file_path = file_path
