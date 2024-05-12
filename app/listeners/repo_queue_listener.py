@@ -1,49 +1,28 @@
+import json
 from app.utils.custom_logger import logger
-import asyncio
-import aioboto3
+from app.service.queue_service.queue_service import QueueService
+from app.service.orchestrator_service.orchestrator import Orchestrator
 
 
-async def receive_messages(queue_url, max_number, wait_time):
-    """
-    Receive a batch of messages asynchronously in a single request from an SQS queue.
-
-    :param queue_url: The URL of the queue from which to receive messages.
-    :param max_number: The maximum number of messages to receive. The actual number
-                       of messages received might be less.
-    :param wait_time: The maximum time to wait (in seconds) before returning. When
-                      this number is greater than zero, long polling is used. This
-                      can result in reduced costs and fewer false empty responses.
-    :return: The list of Message objects received. These each contain the body
-             of the message and metadata and custom attributes.
-    """
-    async with aioboto3.client('sqs') as sqs:
-        try:
-            response = await sqs.receive_message(
-                QueueUrl=queue_url,
-                AttributeNames=['All'],
-                MaxNumberOfMessages=max_number,
-                WaitTimeSeconds=wait_time
-            )
-            messages = response.get('Messages', [])
-            for msg in messages:
-                logger.info("Received message: %s: %s", msg['MessageId'], msg['Body'])
-            return messages
-        except Exception as error:
-            logger.exception("Couldn't receive messages from queue: %s", queue_url)
-            raise error
+queue_service = QueueService()
+orchestrator = Orchestrator()
 
 
-async def listen_for_messages(queue_url, max_number, wait_time):
+async def listen_for_messages(odin_queue, max_number, wait_time):
     while True:
-        messages = await receive_messages(queue_url, max_number, wait_time)
-        if messages:
-            await process_messages(messages)
+        messages = queue_service.receive_messages(odin_queue, max_number, wait_time)
+        for message in messages:
+            await process_message(message)
 
 
-async def process_messages(messages):
-    logger.info("Processing %s messages", len(messages))
-    await asyncio.sleep(5)
+async def process_message(message):
+    body, message_id = message.body, message.message_id
+    logger.info(f"Processing message with id: {message_id}")
 
+    parsed_body = json.loads(body)
+    logger.info(f"Message body: {parsed_body}")
 
+    orchestrator.run(parsed_body)
 
-
+    # Delete record after consuming
+    queue_service.delete_message(message)

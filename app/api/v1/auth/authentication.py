@@ -19,7 +19,7 @@ async def login(login_request: LoginRequest):
         id_token = res.get('idToken')
         return JSONResponse(
             content={'token': id_token},
-            status_code=400
+            status_code=200
         )
     except Exception as e:
         return JSONResponse(

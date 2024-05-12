@@ -12,6 +12,7 @@ class File(Base):
     file_name = Column(String(255), nullable=False)
     parent_folder_path = Column(String(400), nullable=False)
     status = Column(Enum('COMPLETED', 'FAILED'), nullable=False)
+    error = Column(String(255))
 
     metadata_list = relationship('Metadata', back_populates='file')
     repository = relationship('Repository', back_populates='files')

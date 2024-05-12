@@ -26,8 +26,6 @@ class PythonParserStrategy(ParserStrategy):
         if 'definition' in node.type and node.type != 'class_definition':
             metadata.append({
                 'function_type': node.type,
-                'file_name': self.file_name,
-                'file_extension': self.file_extension,
                 'function_code': self.get_code_snippet(node),
                 'function_name': self.get_function_name(node),
                 'class_name': class_name,

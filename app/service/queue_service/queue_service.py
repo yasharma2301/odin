@@ -77,3 +77,22 @@ class QueueService:
             raise error
         else:
             return messages
+
+    def delete_message(self, message):
+        """
+        Delete a message from a queue. Clients must delete messages after they
+        are received and processed to remove them from the queue.
+
+        :param message: The message to delete. The message's queue URL is contained in
+                        the message's metadata.
+        :return: None
+        """
+        try:
+            message.delete()
+            logger.info("Deleted message: %s", message.message_id)
+        except ClientError as error:
+            logger.exception("Couldn't delete message: %s", message.message_id)
+            raise error
+
+
+

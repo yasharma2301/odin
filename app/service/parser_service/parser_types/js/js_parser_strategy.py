@@ -28,8 +28,6 @@ class JsParserStrategy(ParserStrategy):
             if code != 'function':
                 metadata.append({
                     'function_type': node.type,
-                    'file_name': self.file_name,
-                    'file_extension': self.file_extension,
                     'function_code': code,
                     'function_name': self.get_function_name(node),
                     'class_name': class_name,
