@@ -72,8 +72,8 @@ class Orchestrator:
                 'parent_folder_path': result['parent_folder_path'],
                 'status': result['status'],
                 'error': None if 'error' not in result else result['error'],
-                'metadata_list': metadata_object
+                'metadata': metadata_object
             }
             files_to_create.append(file_data)
 
-        self.file_repo.create_files(files_to_create)
+        return self.file_repo.create_files(files_to_create)

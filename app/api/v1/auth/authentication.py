@@ -35,7 +35,7 @@ async def login(signup_request: SignupRequest, db=Depends(get_db)):
     try:
         res = auth_service.signup(email, password, name)
         user_base = {'email': email, 'name': name, 'uid': res.uid}
-        user_repository = UserRepo(db)
+        user_repository = UserRepo()
         created_user = user_repository.create_user(user_base)
         return JSONResponse(
             content=created_user.to_json(),

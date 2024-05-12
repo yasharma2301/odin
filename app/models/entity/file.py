@@ -25,4 +25,6 @@ class File(Base):
             'file_name': self.file_name,
             'parent_folder_path': self.parent_folder_path,
             'status': self.status,
+            'error': self.error,
+            'metadata_list': [metadata.to_json() for metadata in self.metadata_list]
         }
