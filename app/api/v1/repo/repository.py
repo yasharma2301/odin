@@ -69,6 +69,15 @@ async def dumb(request: Request, identifier_id: int, db=Depends(get_db)):
         repository_repo = RepositoryRepo()
         repository = repository_repo.get_repository_by_id(identifier_id)
         if repository:
+            if repository.user_id != get_current_user(request):
+                return JSONResponse(
+                    content={
+                        'status': 'ERROR',
+                        'message': 'You are not authorized to view this repository'
+                    },
+                    status_code=403
+                )
+
             return JSONResponse(
                 content={
                     'status': "SUCCESS",
@@ -76,6 +85,7 @@ async def dumb(request: Request, identifier_id: int, db=Depends(get_db)):
                 },
                 status_code=200
             )
+
         return JSONResponse(
             content={
                 'status': 'ERROR',
