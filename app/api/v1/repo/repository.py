@@ -32,7 +32,7 @@ async def process(request: Request, repository_request: RepositoryProcessRequest
             'status': 'QUEUED',
             'user_id': user_id,
         }
-        repository_repo = RepositoryRepo(db)
+        repository_repo = RepositoryRepo()
         created_repo_entity = repository_repo.create_repository(repository_base)
         queue_service.send_message(odin_queue, json.dumps(created_repo_entity.to_json()), "repoQueue")
         return JSONResponse(
@@ -66,7 +66,7 @@ async def process(request: Request, repository_request: RepositoryProcessRequest
 @router.get("/get_status", dependencies=[Depends(AuthMiddleware.check_auth)])
 async def dumb(request: Request, identifier_id: int, db=Depends(get_db)):
     try:
-        repository_repo = RepositoryRepo(db)
+        repository_repo = RepositoryRepo()
         repository = repository_repo.get_repository_by_id(identifier_id)
         if repository:
             return JSONResponse(

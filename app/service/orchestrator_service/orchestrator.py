@@ -1,16 +1,17 @@
 from app.service.repository_service.repository_service import RepositoryService
 from app.utils.general import current_milli_time
+
 repository_service = RepositoryService()
-from app.core.setup_sql import get_db
 from app.repository.repository_repo.repository_repo import RepositoryRepo
 from app.utils.custom_logger import logger
+from app.repository.file_repo.file_repo import FileRepo
 
 
 class Orchestrator:
 
     def __init__(self):
-        self.db = next(get_db())
-        self.repository_repo = RepositoryRepo(self.db)
+        self.repository_repo = RepositoryRepo()
+        self.file_repo = FileRepo()
 
     def run(self, repo_request):
         run_status = True
@@ -20,14 +21,14 @@ class Orchestrator:
 
         try:
             # Step 1: Make sure there is corresponding entry in database
-            # repository_entry = self.repository_repo.get_repository_by_id(repo_database_id)
-            # assert repository_entry is not None
-            # assert repository_entry.status == 'QUEUED'
-            #
-            # # Step 2: Mark the repository as processing
-            # repository_entry = self.repository_repo.update_repository(repo_database_id, {'status': 'IN_PROGRESS'})
-            # assert repository_entry is not None
-            # assert repository_entry.status == 'IN_PROGRESS'
+            repository_entry = self.repository_repo.get_repository_by_id(repo_database_id)
+            assert repository_entry is not None
+            assert repository_entry.status == 'QUEUED'
+
+            # Step 2: Mark the repository as processing
+            repository_entry = self.repository_repo.update_repository(repo_database_id, {'status': 'IN_PROGRESS'})
+            assert repository_entry is not None
+            assert repository_entry.status == 'IN_PROGRESS'
 
             # Step 3: Clone the repository and walk through the files
             repository_service.clone_local(url, folder_name)
@@ -36,11 +37,11 @@ class Orchestrator:
             results = repository_service.walk_repository_and_collect_results(folder_name)
 
             # Step 5: Store the results in the database
-            print(results)
+            self.store_results(repo_database_id, results)
         except Exception as e:
             logger.error(f"Orchestrator::run: {str(e)}")
             try:
-                self.repository_repo.update_repository(repo_database_id, {'status': 'FAILED'})
+                self.repository_repo.update_repository(repo_database_id, {'status': 'FAILED', 'error': str(e)})
             except Exception as e:
                 logger.error(f"Orchestrator::run:error: {str(e)}")
             run_status = False
@@ -50,3 +51,29 @@ class Orchestrator:
 
         return run_status
 
+    def store_results(self, repo_database_id, results):
+        files_to_create = []
+
+        for result in results:
+            metadata_object = []
+            if 'metadata_list' in result:
+                for metadata in result['metadata_list']:
+                    metadata_object.append({
+                        'function_name': metadata['function_name'],
+                        'function_code': metadata['function_code'],
+                        'function_type': metadata['function_type'],
+                        'class_name': metadata['class_name'],
+                    })
+
+            file_data = {
+                'repository_id': repo_database_id,
+                'file_extension': result['file_extension'],
+                'file_name': result['file_name'],
+                'parent_folder_path': result['parent_folder_path'],
+                'status': result['status'],
+                'error': None if 'error' not in result else result['error'],
+                'metadata_list': metadata_object
+            }
+            files_to_create.append(file_data)
+
+        self.file_repo.create_files(files_to_create)

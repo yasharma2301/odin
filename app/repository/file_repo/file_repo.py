@@ -1,12 +1,10 @@
-
-
-from sqlalchemy.orm import Session
 from app.models.entity.file import File
+from app.core.setup_sql import get_db
 
 
 class FileRepo:
-    def __init__(self, db: Session):
-        self.db = db
+    def __init__(self):
+        self.db = self.db = next(get_db())
 
     def get_file_by_id(self, file_id: int) -> File:
         return self.db.query(File).filter(File.id == file_id).first()
@@ -16,6 +14,11 @@ class FileRepo:
         self.db.add(new_file)
         self.db.commit()
         return new_file
+
+    def create_files(self, files: list) -> bool:
+        self.db.add_all(files)
+        self.db.commit()
+        return True
 
     def update_file(self, file_id: int, file: dict) -> File:
         existing_file = self.get_file_by_id(file_id)

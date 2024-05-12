@@ -1,9 +1,10 @@
-from sqlalchemy.orm import Session
 from app.models.entity.repository import Repository
+from app.core.setup_sql import get_db
+
 
 class RepositoryRepo:
-    def __init__(self, db: Session):
-        self.db = db
+    def __init__(self):
+        self.db = next(get_db())
 
     def get_repository_by_id(self, repository_id: int) -> Repository:
         return self.db.query(Repository).filter(Repository.id == repository_id).first()

@@ -1,10 +1,10 @@
-from sqlalchemy.orm import Session
 from app.models.entity.user import User
+from app.core.setup_sql import get_db
 
 
 class UserRepo:
-    def __init__(self, db: Session):
-        self.db = db
+    def __init__(self):
+        self.db = next(get_db())
 
     def get_user_by_id(self, user_id: int) -> User:
         return self.db.query(User).filter(User.id == user_id).first()

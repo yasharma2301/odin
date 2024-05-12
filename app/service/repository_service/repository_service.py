@@ -16,7 +16,7 @@ class RepositoryService:
 
     def walk_repository_and_collect_results(self, folder_name):
         log_prefix = "RepositoryService::walk_repository_and_collect_results:"
-        folder_path = get_folder_from_temp_data_directory(folder_name)
+        base_folder_path = get_folder_from_temp_data_directory(folder_name)
         results = []
 
         def process_directory(folder_path):
@@ -25,9 +25,9 @@ class RepositoryService:
                     file_path = os.path.join(root, file_name)
                     file, file_extension = os.path.splitext(file_path)
                     base_result_object = {
-                        'file_name': file_name,
-                        'file_extension': file_name.replace(file_extension, ''),
-                        'parent_folder_path': root.replace(folder_path, ''),
+                        'file_name': file_name.replace(file_extension, ''),
+                        'file_extension': file_extension,
+                        'parent_folder_path': root.replace(base_folder_path, ''),
                     }
                     try:
                         parsed_meta_data = code_parser_service.parse_file(file_path)
@@ -48,7 +48,7 @@ class RepositoryService:
                     if os.path.isdir(full_path):
                         process_directory(full_path)
 
-        process_directory(folder_path)
+        process_directory(base_folder_path)
         return results
 
     def clean_folder_if_exists(self, folder_name):
