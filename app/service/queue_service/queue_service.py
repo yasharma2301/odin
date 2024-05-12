@@ -28,7 +28,7 @@ class QueueService:
         else:
             return queue
 
-    def send_message(self, queue, message_body, message_attributes=None):
+    def send_message(self, queue, message_body, message_group_id, message_attributes=None):
         """
         Send a message to an Amazon SQS queue.
 
@@ -43,7 +43,7 @@ class QueueService:
 
         try:
             response = queue.send_message(
-                MessageBody=message_body, MessageAttributes=message_attributes
+                MessageBody=message_body, MessageAttributes=message_attributes, MessageGroupId=message_group_id
             )
         except ClientError as error:
             logger.exception("Send message failed: %s", message_body)

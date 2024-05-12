@@ -24,7 +24,6 @@ odin_queue = queue_service.get_queue(default_queue)
 
 @router.post("/process", dependencies=[Depends(AuthMiddleware.check_auth)])
 async def process(request: Request, repository_request: RepositoryProcessRequest, db=Depends(get_db)):
-
     try:
         url = repository_request.url
         user_id = get_current_user(request)
@@ -35,9 +34,15 @@ async def process(request: Request, repository_request: RepositoryProcessRequest
         }
         repository_repo = RepositoryRepo(db)
         created_repo_entity = repository_repo.create_repository(repository_base)
-        queue_service.send_message(odin_queue, json.dumps(created_repo_entity.to_json()))
+        queue_service.send_message(odin_queue, json.dumps(created_repo_entity.to_json()), "repoQueue")
         return JSONResponse(
-            content={'status': "SUCCESS", 'identifier': created_repo_entity.id},
+            content={
+                'status': "SUCCESS",
+                'data': {
+                    'identifier': created_repo_entity.id
+                },
+                'message': "Use the identifier to check the status of result"
+            },
             status_code=200
         )
     except IntegrityError as e:
@@ -58,9 +63,34 @@ async def process(request: Request, repository_request: RepositoryProcessRequest
         )
 
 
-@router.post("/dumb")
-async def dumb(request: Request):
-    return repository_service.walk_repository_and_collect_results()
+@router.get("/get_status", dependencies=[Depends(AuthMiddleware.check_auth)])
+async def dumb(request: Request, identifier_id: int, db=Depends(get_db)):
+    try:
+        repository_repo = RepositoryRepo(db)
+        repository = repository_repo.get_repository_by_id(identifier_id)
+        if repository:
+            return JSONResponse(
+                content={
+                    'status': "SUCCESS",
+                    'data': repository.to_json()
+                },
+                status_code=200
+            )
+        return JSONResponse(
+            content={
+                'status': 'ERROR',
+                'message': 'Repository not found'
+            },
+            status_code=404
+        )
+    except Exception as e:
+        return JSONResponse(
+            content={
+                'status': 'ERROR',
+                'message': str(e)
+            },
+            status_code=400
+        )
     # return code_parser_service.parse_file()
     # folder_name = f"{get_current_user(request)}-{current_milli_time()}"
     # repository_service.clone_local(url, folder_name)
