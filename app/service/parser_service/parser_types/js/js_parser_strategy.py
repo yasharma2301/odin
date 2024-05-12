@@ -6,7 +6,8 @@ class JsParserStrategy(ParserStrategy):
     def __init__(self, file_path):
         parser_lang = 'javascript'
         class_name_pattern = r'class\s+([A-Za-z_$][A-Za-z0-9_$]*)\s*[{]'
-        super().__init__(file_path, parser_lang, class_name_pattern)
+        function_name_pattern = r'function\s+([A-Za-z_$][A-Za-z0-9_$]*)\s*\('
+        super().__init__(file_path, parser_lang, class_name_pattern, function_name_pattern)
 
     def retrieve_function_metadata(self):
         metadata = []
@@ -23,26 +24,18 @@ class JsParserStrategy(ParserStrategy):
 
     def add_valid_metadata(self, metadata, node, class_name):
         if 'function' in node.type or node.type == 'method_definition':
-            code = self.source_code[node.start_byte:node.end_byte]
+            code = self.get_code_snippet(node)
             if code != 'function':
-                function_name = self.get_function_name(node)
                 metadata.append({
                     'function_type': node.type,
                     'file_name': self.file_name,
                     'file_extension': self.file_extension,
                     'function_code': code,
-                    'function_name': function_name,
+                    'function_name': self.get_function_name(node),
                     'class_name': class_name,
                 })
 
     def get_function_name(self, node):
         if node.type != 'function_declaration':
             return None
-
-        function_code = self.source_code[node.start_byte:node.end_byte]
-        pattern = r'function\s+([A-Za-z_$][A-Za-z0-9_$]*)\s*\('
-        match = re.search(pattern, function_code)
-        if match:
-            return next(group for group in match.groups() if group is not None)
-
-        return None
+        super().get_function_name(node)

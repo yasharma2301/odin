@@ -14,7 +14,7 @@ class RepositoryService:
 
     def walk_repository_and_collect_results(self):
         folder_path = '/Users/yashsharma/Desktop/yash/odin/temp_data/AOecRto80EhKKfFQRFnXOQ1xgd82-1715463366811'
-        file_name = "/Users/yashsharma/Desktop/yash/odin/temp_data/mine.py"
+        file_name = "/Users/yashsharma/Desktop/yash/odin/temp_data/mine.js"
         return code_parser_service.parse_file(file_name)
         # for root, _, files in os.walk(folder_path):
         #     for file_name in files:

@@ -4,10 +4,11 @@ import os
 import re
 
 class ParserStrategy(ABC):
-    def __init__(self, file_path, parser_lang, class_name_pattern):
+    def __init__(self, file_path, parser_lang, class_name_pattern, function_name_pattern):
         self.file_path = file_path
         self.parser_lang = parser_lang
         self.class_name_pattern = class_name_pattern
+        self.function_name_pattern = function_name_pattern
         self.file_name, self.file_extension = self.__set_file_name()
         self.source_code = self.__read_source_code()
         self.parser = self.__set_parser()
@@ -40,8 +41,13 @@ class ParserStrategy(ABC):
         return self.source_code[node.start_byte:node.end_byte]
 
     def get_class_name(self, node):
-        class_code = self.get_code_snippet(node)
-        match = re.search(self.class_name_pattern, class_code)
+        match = re.search(self.class_name_pattern, self.get_code_snippet(node))
         if match:
             return match.group(1)
+        return None
+
+    def get_function_name(self, node):
+        match = re.search(self.function_name_pattern, self.get_code_snippet(node))
+        if match:
+            return next(group for group in match.groups() if group is not None)
         return None
