@@ -11,6 +11,10 @@ requests = "*"
 gitpython = "*"
 tree-sitter = "*"
 tree-sitter-languages = "*"
+boto3 = "*"
+botocore = "*"
+sqlalchemy = "*"
+pymysql = "*"
 
 [dev-packages]
 

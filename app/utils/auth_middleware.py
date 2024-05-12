@@ -1,5 +1,5 @@
 from fastapi.requests import Request
-from app.service.AuthService import AuthService
+from app.service.auth_service.auth_service import AuthService
 from fastapi import HTTPException
 
 

@@ -1,7 +1,10 @@
-from fastapi import APIRouter
-from app.models.auth.LoginRequest import LoginRequest
+from fastapi import APIRouter, Depends
+from app.models.dto.auth.LoginRequest import LoginRequest
 from fastapi.responses import JSONResponse
-from app.service.AuthService import AuthService
+from app.service.auth_service.auth_service import AuthService
+from app.core.setup_sql import get_db
+from app.models.dto.auth.SignupRequest import SignupRequest
+from app.repository.user_repo.user_rep import UserRepo
 
 router = APIRouter()
 auth_service = AuthService()
@@ -26,14 +29,17 @@ async def login(login_request: LoginRequest):
     
 
 @router.post("/signup")
-async def login(signup_request: LoginRequest):
-    email, password = signup_request.email, signup_request.password
+async def login(signup_request: SignupRequest, db=Depends(get_db)):
+    email, password, name = signup_request.email, signup_request.password, signup_request.full_name
 
     try:
-        res = auth_service.signup(email, password)
+        res = auth_service.signup(email, password, name)
+        user_base = {'email': email, 'name': name, 'uid': res.uid}
+        user_repository = UserRepo(db)
+        created_user = user_repository.create_user(user_base)
         return JSONResponse(
-            content={'message': f"Signed up successfully with user id: {res.uid}, you can now login!"},
-            status_code=400
+            content=created_user.to_json(),
+            status_code=201
         )
     except Exception as e:
         return JSONResponse(

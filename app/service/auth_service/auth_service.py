@@ -1,3 +1,5 @@
+import os
+
 import requests
 from firebase_admin import auth
 
@@ -5,9 +7,9 @@ from firebase_admin import auth
 class AuthService:
     def login(self, email, password):
         log_prefix = "AuthService::login:"
+        identity_tool_kit_id = os.getenv('GOOGLE_IDENTITY_TOOL_KIT_KEY')
         identity_url = (
-            'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAU42ON'
-            '-TDt1pFVSmFzuEGViL7NFZ13dbI')
+            f'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={identity_tool_kit_id}')
 
         user_auth_response = requests.post(url=identity_url, json={
             "email": email,

@@ -4,6 +4,8 @@ from app.api.v1.auth.authentication import router as auth_login_router
 from app.api.v1.repo.repository import router as repo_router
 import firebase_admin
 from firebase_admin import credentials
+from app.core.setup_sql import Base, database_engine
+from app.models.entity import user, repository, metadata, file
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -26,6 +28,9 @@ app.add_middleware(
 if not firebase_admin._apps:
     cred = credentials.Certificate("./odin-firebase-service-account.json")
     firebase_admin.initialize_app(cred)
+
+# Initialize Mysql
+Base.metadata.create_all(bind=database_engine)
 
 app.include_router(auth_login_router, prefix="/api/v1/auth")
 app.include_router(repo_router, prefix="/api/v1/repository")

@@ -2,6 +2,7 @@ from git import Repo
 from app.utils.general import get_folder_from_temp_data_directory
 import os
 from app.service.parser_service.parser_service import CodeParserService
+# from app.utils.custom_logger import logger
 
 code_parser_service = CodeParserService()
 
@@ -14,6 +15,7 @@ class RepositoryService:
         return cloned_repo
 
     def walk_repository_and_collect_results(self, folder_path):
+        log_prefix = "RepositoryService::walk_repository_and_collect_results:"
         results = []
         for root, _, files in os.walk(folder_path):
             for file_name in files:
@@ -22,7 +24,8 @@ class RepositoryService:
                     parsed_meta_data = code_parser_service.parse_file(file_path)
                     results.append(parsed_meta_data)
                 except Exception as e:
-                    print(str(e))
+                    pass
+                    # logger.error(f"{log_prefix} {str(e)}")
         return results
 
 
