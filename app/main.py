@@ -41,20 +41,3 @@ Base.metadata.create_all(bind=database_engine)
 app.include_router(auth_login_router, prefix="/api/v1/auth")
 app.include_router(repo_router, prefix="/api/v1/repository")
 app.include_router(file_router, prefix="/api/v1/file")
-
-# Async tasks
-asyncio.run(read_message(process_message))
-
-# if __name__ == 'app.main':
-#     try:
-#         loop = asyncio.get_running_loop()
-#     except RuntimeError:
-#         loop = None
-#     if loop and loop.is_running():
-#         print('Async event loop already running. Adding coroutine to the event loop.')
-#         tsk = loop.create_task(read_message(process_message))
-#         tsk.add_done_callback(
-#             lambda t: print(f'Task done with result={t.result()}  << return val of main()'))
-#     else:
-#         print('Starting new event loop')
-#         result = asyncio.run(read_message(process_message))

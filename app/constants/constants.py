@@ -1,1 +1,1 @@
-default_queue = 'odin.fifo'
+default_queue = 'odin-main-queue'

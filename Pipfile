@@ -17,6 +17,7 @@ sqlalchemy = "*"
 pymysql = "*"
 asyncio = "*"
 aioboto3 = "*"
+celery = {extras = ["sqs"], version = "*"}
 
 [dev-packages]
 

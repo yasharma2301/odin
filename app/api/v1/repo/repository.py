@@ -34,7 +34,7 @@ async def process(request: Request, repository_request: RepositoryProcessRequest
         }
         repository_repo = RepositoryRepo()
         created_repo_entity = repository_repo.create_repository(repository_base)
-        queue_service.send_message(odin_queue, json.dumps(created_repo_entity.to_json()), "repoQueue")
+        queue_service.send_message(odin_queue, json.dumps(created_repo_entity.to_json()))
         return JSONResponse(
             content={
                 'status': "SUCCESS",
