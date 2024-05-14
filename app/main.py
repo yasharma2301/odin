@@ -9,7 +9,6 @@ from app.core.setup_sql import Base, database_engine
 from app.models.entity import user, repository, metadata, file
 import asyncio
 from app.service.queue_service.async_queue_service import read_message
-from app.listeners.repo_queue_listener import process_message
 from app.api.v1.file.file import router as file_router
 
 # Initialize FastAPI app

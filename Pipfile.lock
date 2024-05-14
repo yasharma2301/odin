@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "28552ac86a9735a5e3824f3700a3c3f2e636695b8140e88e35f74ae7e4f4b236"
+            "sha256": "f4546c4452469acbad986a10f7cc19a4deeaa647514ce58c93acff72ba9aa053"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -475,6 +475,15 @@
             "markers": "python_version >= '3.8'",
             "version": "==2.1.1"
         },
+        "eventlet": {
+            "hashes": [
+                "sha256:d227fe76a63d9e6a6cef53beb8ad0b2dc40a5e7737c801f4b474cfae1db07bc5",
+                "sha256:e42d0f73b718e654c223a033b8692d1a94d778a6c1deb6c3d21442746f3f727f"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.7'",
+            "version": "==0.36.1"
+        },
         "fastapi": {
             "hashes": [
                 "sha256:97ecbf994be0bcbdadedf88c3150252bed7b2087075ac99735403b1b76cc8fc0",
@@ -810,7 +819,7 @@
                 "sha256:fd096eb7ffef17c456cfa587523c5f92321ae02427ff955bebe9e3c63bc9f0da",
                 "sha256:fe754d231288e1e64323cfad462fcee8f0288654c10bdf4f603a39ed923bef33"
             ],
-            "markers": "platform_machine == 'aarch64' or (platform_machine == 'ppc64le' or (platform_machine == 'x86_64' or (platform_machine == 'amd64' or (platform_machine == 'AMD64' or (platform_machine == 'win32' or platform_machine == 'WIN32')))))",
+            "markers": "python_version >= '3.7'",
             "version": "==3.0.3"
         },
         "grpcio": {
@@ -1922,7 +1931,7 @@
                 "sha256:450b20ec296a467077128bff42b73080516e71b56ff59a60a02bef2232c4fa9d",
                 "sha256:d0570876c61ab9e520d776c38acbbb5b05a776d3f9ff98a5c8fd5162a444cf19"
             ],
-            "markers": "python_version >= '3.10'",
+            "markers": "python_version >= '3.8'",
             "version": "==2.2.1"
         },
         "uvicorn": {

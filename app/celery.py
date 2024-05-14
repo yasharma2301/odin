@@ -33,9 +33,11 @@ app = Celery(
     task_create_missing_queues=False,
 )
 
-@app.task
+@app.task(bind=True, name='celerysqs.tasks.process')
 def process_message(message):
     parsed_message = json.loads(message)
     logger.info(f"Message body: {parsed_message}")
+    print('yash', message)
 
-    orchestrator.run(parsed_message)
+    # orchestrator.run(parsed_message)
+    
