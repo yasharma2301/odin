@@ -37,7 +37,7 @@ class RepositoryService:
                             'status': 'SUCCESS',
                         })
                     except Exception as e:
-                        logger.error(f"{log_prefix} {str(e)}")
+                        logger.error(f"{log_prefix} {e}")
                         results.append({
                             **base_result_object,
                             'status': 'FAILED',

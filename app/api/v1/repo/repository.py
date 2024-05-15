@@ -8,22 +8,25 @@ from app.utils.auth_middleware import AuthMiddleware
 from app.utils.general import get_current_user, current_milli_time
 from fastapi.requests import Request
 from app.service.parser_service.parser_service import CodeParserService
-from app.service.queue_service.queue_service import QueueService
+# from app.service.queue_service.queue_service import QueueService
 from app.constants.constants import default_queue
 from app.core.setup_sql import get_db
 from app.repository.repository_repo.repository_repo import RepositoryRepo
 from sqlalchemy.exc import IntegrityError
+from app.service.orchestrator_service.orchestrator import Orchestrator
+from fastapi.security import HTTPBearer
 
 router = APIRouter()
 repository_service = RepositoryService()
 auth_service = AuthService()
 code_parser_service = CodeParserService()
-queue_service = QueueService()
-odin_queue = queue_service.get_queue(default_queue)
-
+# queue_service = QueueService()
+# odin_queue = queue_service.get_queue(default_queue)
+orchestrator = Orchestrator()
+security = HTTPBearer()
 
 @router.post("/process", dependencies=[Depends(AuthMiddleware.check_auth)])
-async def process(request: Request, repository_request: RepositoryProcessRequest, db=Depends(get_db)):
+async def process(request: Request, repository_request: RepositoryProcessRequest, db=Depends(get_db), authorization=Depends(security)):
     try:
         url = repository_request.url
         user_id = get_current_user(request)
@@ -34,7 +37,13 @@ async def process(request: Request, repository_request: RepositoryProcessRequest
         }
         repository_repo = RepositoryRepo()
         created_repo_entity = repository_repo.create_repository(repository_base)
-        queue_service.send_message(odin_queue, json.dumps(created_repo_entity.to_json()))
+
+        # Using sync function for now
+        orchestrator.run(created_repo_entity.to_json())
+
+        # Commenting queue code for now as celery[sqs] setup is not working correctly atm
+        # queue_service.send_message(odin_queue, json.dumps(created_repo_entity.to_json()))
+
         return JSONResponse(
             content={
                 'status': "SUCCESS",
@@ -63,8 +72,9 @@ async def process(request: Request, repository_request: RepositoryProcessRequest
         )
 
 
-@router.get("/get_status", dependencies=[Depends(AuthMiddleware.check_auth)])
-async def dumb(request: Request, identifier_id: int, db=Depends(get_db)):
+# TODO: At the moment, all files and all metadata are passed as response, this can be further optimised via porting less data over network
+@router.get("/retrieve", dependencies=[Depends(AuthMiddleware.check_auth)])
+async def retrieve(request: Request, identifier_id: int, db=Depends(get_db), authorization=Depends(security)):
     try:
         repository_repo = RepositoryRepo()
         repository = repository_repo.get_repository_by_id(identifier_id)

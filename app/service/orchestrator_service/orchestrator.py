@@ -38,6 +38,9 @@ class Orchestrator:
 
             # Step 5: Store the results in the database
             self.store_results(repo_database_id, results)
+
+            # Step 6: Mark this job as success
+            self.repository_repo.update_repository(repo_database_id, {'status': 'COMPLETED'})
         except Exception as e:
             logger.error(f"Orchestrator::run: {str(e)}")
             try:
@@ -46,7 +49,7 @@ class Orchestrator:
                 logger.error(f"Orchestrator::run:error: {str(e)}")
             run_status = False
         finally:
-            # Step 5: Cleanup the cloned folder if any
+            # Cleanup the cloned folder if any
             repository_service.clean_folder_if_exists(folder_name)
 
         return run_status

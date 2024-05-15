@@ -26,5 +26,6 @@ class Repository(Base):
             'url': self.url,
             'status': self.status,
             'error': self.error,
+            'files': [file.to_json() for file in self.files]
         }
 

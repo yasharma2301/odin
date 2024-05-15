@@ -7,9 +7,9 @@ from firebase_admin import credentials
 from app.core.setup_sql import Base, database_engine
 # Do not remove - Required for creating tables | TODO: Find a better way to do this
 from app.models.entity import user, repository, metadata, file
-import asyncio
-from app.service.queue_service.async_queue_service import read_message
 from app.api.v1.file.file import router as file_router
+from app.service.parser_service.parser_types.js.js_parser_strategy import JsParserStrategy
+
 
 # Initialize FastAPI app
 app = FastAPI(

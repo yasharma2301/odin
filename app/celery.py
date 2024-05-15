@@ -1,11 +1,7 @@
-from celery import Celery
+from celery import Celery, Task
 import os
 import urllib
-import json
-from app.utils.custom_logger import logger
-from app.service.orchestrator_service.orchestrator import Orchestrator
 
-orchestrator = Orchestrator()
 
 aws_access_key_id=os.getenv('AWS_SERVER_PUBLIC_KEY')
 aws_secret_access_key=os.getenv('AWS_SERVER_SECRET_KEY')
@@ -31,13 +27,20 @@ app = Celery(
         },
     },
     task_create_missing_queues=False,
+    broker_connection_retry_on_startup=True,
+    broker_connection_retry=True,
+    worker_concurrency=1,
+    celery_routes = {
+        'tasks.celery.run_process':{
+            'queue' : 'odin-main-queue'
+        }
+    }
 )
 
-@app.task(bind=True, name='celerysqs.tasks.process')
-def process_message(message):
-    parsed_message = json.loads(message)
-    logger.info(f"Message body: {parsed_message}")
-    print('yash', message)
+@app.task(name="celery.run_process", bind=True)
+def run_process():
+    print("Message received")
+    return "Task executed successfully"
 
-    # orchestrator.run(parsed_message)
-    
+
+# celery --app=app.celery worker --pool=solo --concurrency=1 --loglevel=DEBUG --queues=celery -E

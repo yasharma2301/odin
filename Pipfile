@@ -9,16 +9,12 @@ uvicorn = "*"
 firebase-admin = "*"
 requests = "*"
 gitpython = "*"
-tree-sitter = "*"
+tree-sitter = "==0.21.3"
 tree-sitter-languages = "*"
-boto3 = "*"
-botocore = "*"
 sqlalchemy = "*"
 pymysql = "*"
 asyncio = "*"
-aioboto3 = "*"
 celery = {extras = ["sqs"], version = "*"}
-eventlet = "*"
 
 [dev-packages]
 
