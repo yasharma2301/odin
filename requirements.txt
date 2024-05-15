@@ -1,14 +1,21 @@
 -i https://pypi.org/simple
+amqp==5.2.0; python_version >= '3.6'
 annotated-types==0.6.0; python_version >= '3.8'
 anyio==4.3.0; python_version >= '3.8'
-boto3==1.34.103; python_version >= '3.8'
-botocore==1.34.103; python_version >= '3.8'
+asyncio==3.4.3
+billiard==4.2.0; python_version >= '3.7'
+boto3==1.34.105
+botocore==1.34.105; python_version >= '3.8'
 cachecontrol==0.14.0; python_version >= '3.7'
 cachetools==5.3.3; python_version >= '3.7'
+celery[sqs]==5.4.0; python_version >= '3.8'
 certifi==2024.2.2; python_version >= '3.6'
 cffi==1.16.0; platform_python_implementation != 'PyPy'
 charset-normalizer==3.3.2; python_full_version >= '3.7.0'
 click==8.1.7; python_version >= '3.7'
+click-didyoumean==0.3.1; python_full_version >= '3.6.2'
+click-plugins==1.1.1
+click-repl==0.3.0; python_version >= '3.6'
 cryptography==42.0.7
 dnspython==2.6.1; python_version >= '3.8'
 email-validator==2.1.1; python_version >= '3.8'
@@ -27,6 +34,7 @@ google-cloud-storage==2.16.0; python_version >= '3.7'
 google-crc32c==1.5.0; python_version >= '3.7'
 google-resumable-media==2.7.0; python_version >= '3.7'
 googleapis-common-protos==1.63.0; python_version >= '3.7'
+greenlet==3.0.3; platform_machine == 'aarch64' or (platform_machine == 'ppc64le' or (platform_machine == 'x86_64' or (platform_machine == 'amd64' or (platform_machine == 'AMD64' or (platform_machine == 'win32' or platform_machine == 'WIN32')))))
 grpcio==1.63.0
 grpcio-status==1.62.2
 h11==0.14.0; python_version >= '3.7'
@@ -37,20 +45,24 @@ httpx==0.27.0; python_version >= '3.8'
 idna==3.7; python_version >= '3.5'
 jinja2==3.1.4; python_version >= '3.7'
 jmespath==1.0.1; python_version >= '3.7'
+kombu[sqs]==5.3.7; python_version >= '3.8'
 markdown-it-py==3.0.0; python_version >= '3.8'
 markupsafe==2.1.5; python_version >= '3.7'
 mdurl==0.1.2; python_version >= '3.7'
 msgpack==1.0.8; python_version >= '3.8'
 orjson==3.10.3; python_version >= '3.8'
+prompt-toolkit==3.0.43; python_full_version >= '3.7.0'
 proto-plus==1.23.0; python_version >= '3.6'
 protobuf==4.25.3; python_version >= '3.8'
 pyasn1==0.6.0; python_version >= '3.8'
 pyasn1-modules==0.4.0; python_version >= '3.8'
 pycparser==2.22; python_version >= '3.8'
+pycurl==7.45.3
 pydantic==2.7.1; python_version >= '3.8'
 pydantic-core==2.18.2; python_version >= '3.8'
 pygments==2.18.0; python_version >= '3.8'
 pyjwt[crypto]==2.8.0; python_version >= '3.7'
+pymysql==1.1.0; python_version >= '3.7'
 pyparsing==3.1.2; python_version >= '3.1'
 python-dateutil==2.9.0.post0; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
 python-dotenv==1.0.1
@@ -70,10 +82,13 @@ tree-sitter==0.21.3; python_version >= '3.8'
 tree-sitter-languages==1.10.2
 typer==0.12.3; python_version >= '3.7'
 typing-extensions==4.11.0; python_version >= '3.8'
-ujson==5.9.0; python_version >= '3.8'
+tzdata==2024.1; python_version >= '2'
+ujson==5.10.0; python_version >= '3.8'
 uritemplate==4.1.1; python_version >= '3.6'
-urllib3==2.2.1; python_version >= '3.10'
+urllib3==2.2.1; python_version >= '3.8'
 uvicorn[standard]==0.29.0; python_version >= '3.8'
 uvloop==0.19.0
+vine==5.1.0; python_version >= '3.6'
 watchfiles==0.21.0
+wcwidth==0.2.13
 websockets==12.0
